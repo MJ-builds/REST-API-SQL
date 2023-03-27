@@ -12,6 +12,7 @@ const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'tr
 
 // create the Express app
 const app = express();
+// setup request body JSON parsing
 app.use(express.json());
 
 // setup - any routes from the routes folder will be prefixed with /api
