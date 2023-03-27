@@ -11,6 +11,10 @@ exports.authenticateUser = async (req, res, next) => {
 //if the user's credentials are available:  
     if(credentials) {
         const user = await User.findOne({ where: { emailAddress: credentials.name } });
+
+        if (user) {
+            const authenticated = bcrypt.compareSync(credentials.pass, user.password);
+        }
     }
 
   next();
