@@ -5,6 +5,8 @@ const router = express.Router();
 
 const { User, Course } = require("./models");
 
+const {authenticateUser}  = require("./middleware/auth-user");
+
 // // Get references to our models.
 // const { User, Course } = models;
 
@@ -19,9 +21,15 @@ function asyncHandler(cb) {
   };
 }
 
-router.get("/users",asyncHandler(async (req, res) => {
-    const users = await User.findAll();
-    res.json(users);
+router.get("/users",authenticateUser,asyncHandler(async (req, res) => {
+    const user = req.currentUser;
+    res.status(200)
+    .json({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailAddress: user.emailAddress
+    });
 }));
 
 module.exports = router;
