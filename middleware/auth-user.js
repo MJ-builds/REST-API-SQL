@@ -1,6 +1,7 @@
 "use strict";
 
 const auth = require("basic-auth");
+const bcrypt = require('bcrypt');
 //import the User model
 const { User } = require('../models');
 
