@@ -8,12 +8,16 @@ module.exports = (sequelize) => {
     {
       firstName: {
         type: DataTypes.STRING,
+        field: 'firstName',
       },
       lastName: {
         type: DataTypes.STRING,
+        field: 'lastName',
       },
       emailAddress: {
         type: DataTypes.STRING,
+        unique: true,
+        field: 'emailAddress'
       },
       password: {
         type: DataTypes.STRING,
@@ -22,6 +26,7 @@ module.exports = (sequelize) => {
             const hashedPassword = bcrypt.hashSync(rawPassword, 10);
             this.setDataValue('password', hashedPassword);   
         },
+        field: 'password',
       },
     },
     { sequelize }
