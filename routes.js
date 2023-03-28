@@ -5,7 +5,7 @@ const router = express.Router();
 
 const { User, Course } = require("./models");
 
-const {authenticateUser}  = require("./middleware/auth-user");
+const { authenticateUser } = require("./middleware/auth-user");
 
 // // Get references to our models.
 // const { User, Course } = models;
@@ -21,23 +21,33 @@ function asyncHandler(cb) {
   };
 }
 
-router.get("/users",authenticateUser,asyncHandler(async (req, res) => {
+router.get("/users", authenticateUser, asyncHandler(async (req, res) => {
     const user = req.currentUser;
-    res.status(200)
-    .json({
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        emailAddress: user.emailAddress
+    res.status(200).json({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      emailAddress: user.emailAddress,
     });
-}));
+  })
+);
 
-router.post('/users', asyncHandler(async (req, res) => {
-    // Create a new user using the extracted data
-    await User.create(req.body);
-    res.location('/');
-    // Return 201 status/no content
-    res.status(201).end();
-  }));
+router.post("/users",asyncHandler(async (req, res) => {
+    try {
+      // Create a new user using the extracted data
+      await User.create(req.body);
+      res.location("/");
+      // Return 201 status/no content
+      res.status(201).end();
+    } catch (error) {
+      if (error.name === "SequelizeValidationError" || error.name === "SequelizeUniqueConstraintError") {
+        const errors = error.errors.map((err) => err.message);
+        res.status(400).json({ errors });
+      } else {
+        throw error;
+      }
+    }
+  })
+);
 
 module.exports = router;
