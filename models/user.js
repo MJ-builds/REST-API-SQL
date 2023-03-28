@@ -12,33 +12,68 @@ module.exports = (sequelize) => {
         allowNull: false,
       validate: {
         notNull: {
-          msg: 'A name is required'
+          msg: 'A first name is required'
         },
         notEmpty: {
-          msg: 'Please provide a name'
+          msg: 'Please provide a first name'
         }
       }
       },
       lastName: {
         type: DataTypes.STRING,
         field: 'lastName',
+        allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'A last name is required'
+        },
+        notEmpty: {
+          msg: 'Please provide a last name'
+        }
+      }
       },
       emailAddress: {
         type: DataTypes.STRING,
-        unique: true,
-        field: 'emailAddress'
+        field: 'emailAddress',
+        allowNull: false,
+        unique: {
+          msg: 'The email you entered already exists'
+        },
+        validate: {
+          notNull: {
+            msg: 'An email is required'
+          },
+          isEmail: {
+            msg: 'Please provide a valid email address'
+          }
+        }
       },
       password: {
         type: DataTypes.STRING,
-        //encrypt the password using bcrypt and set that value to the password property
-        set(rawPassword) {
-            const hashedPassword = bcrypt.hashSync(rawPassword, 10);
-            this.setDataValue('password', hashedPassword);   
-        },
         field: 'password',
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'A password is required'
+          },
+          notEmpty: {
+            msg: 'Please provide a password'
+          },
+          len: {
+            args: [8, 20],
+            msg: 'The password should be between 8 and 20 characters in length'
+          },
+        },
       },
     },
-    { sequelize }
+    { sequelize,
+      hooks: {
+        // Hash the password before creating a new user - this allows for validation of the password
+        beforeCreate: async (user) => {
+          user.password = await bcrypt.hash(user.password, 10);
+        },
+      }
+    }
   );
 
   // todo: Add associations 'as' property to the model definition.
