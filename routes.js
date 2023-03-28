@@ -21,6 +21,7 @@ function asyncHandler(cb) {
   };
 }
 
+//GET - return the currently authenticated user
 router.get("/users", authenticateUser, asyncHandler(async (req, res) => {
     const user = req.currentUser;
     res.status(200).json({
@@ -32,6 +33,7 @@ router.get("/users", authenticateUser, asyncHandler(async (req, res) => {
   })
 );
 
+//POST - create users
 router.post("/users",asyncHandler(async (req, res) => {
     try {
       // Create a new user using the extracted data
@@ -49,5 +51,15 @@ router.post("/users",asyncHandler(async (req, res) => {
     }
   })
 );
+
+//GET courses
+router.get("/courses", asyncHandler(async (req, res) => {
+    const courses = await Course.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+    res.json(courses);
+    }));
 
 module.exports = router;
