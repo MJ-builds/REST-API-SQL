@@ -7,9 +7,6 @@ const { User, Course } = require("./models");
 
 const { authenticateUser } = require("./middleware/auth-user");
 
-// // Get references to our models.
-// const { User, Course } = models;
-
 // Handler function to wrap each route. Reused from previous Treehouse project.
 function asyncHandler(cb) {
   return async (req, res, next) => {
