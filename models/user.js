@@ -68,7 +68,8 @@ module.exports = (sequelize) => {
     },
     { sequelize,
       hooks: {
-        // Hash the password before creating a new user - this allows for validation of the password
+        /* Hash the password before creating a new user, using hook beforeCreate 
+        - this allows for validation of the password */
         beforeCreate: async (user) => {
           user.password = await bcrypt.hash(user.password, 10);
         },
