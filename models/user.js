@@ -79,8 +79,8 @@ module.exports = (sequelize) => {
 
   // todo: Add associations 'as' property to the model definition.
   User.associate = (models) => {
-    User.hasMany(models.Course, 
-      { 
+    User.hasMany(models.Course, { 
+        as: 'user', //alias
         foreignKey: {
           fieldName: 'userId',
           allowNull: false,
