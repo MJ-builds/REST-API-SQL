@@ -73,7 +73,7 @@ router.get(
           model: User,
           as: "user",
           attributes: {
-            exclude: ["createdAt", "updatedAt"],
+            exclude: ["createdAt", "updatedAt", "password"],
           },
         },
       ],
@@ -92,7 +92,15 @@ router.get(
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
-      include: [{ model: User, as: "user" }],
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "password"],
+          },
+        },
+      ],
     });
     if (course) {
       res.status(200).json(course);
