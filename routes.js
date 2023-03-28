@@ -59,7 +59,7 @@ router.get("/courses", asyncHandler(async (req, res) => {
         exclude: ["createdAt", "updatedAt"],
       },
     });
-    res.json(courses);
+    res.status(200).json(courses);
     }));
 
 module.exports = router;
