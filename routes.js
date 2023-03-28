@@ -128,7 +128,29 @@ try {
         await course.update(req.body);
         res.status(204).end();
       } else {
-        res.status(403).json({ message: "Unauthorised User Edit - Denied" });
+        res.status(403).json({ message: "Unauthorised User - Edit Denied" });
+      }
+  } catch (error) {
+    if (
+      error.name === "SequelizeValidationError" ||
+      error.name === "SequelizeUniqueConstraintError"
+    ) {
+      const errors = error.errors.map((err) => err.message);
+      res.status(400).json({ errors });
+    } else {
+      throw error;
+    }
+  }
+}));
+//DELETE - delete a particular course - authentication required
+router.delete("/courses/:id", authenticateUser, asyncHandler(async (req, res) => {
+try {
+    const course = await Course.findByPk(req.params.id);
+      if (course.userId === req.currentUser.id) {
+        await course.destroy();
+        res.status(204).end();
+      } else {
+        res.status(403).json({ message: "Unauthorised User - Delete Denied" });
       }
   } catch (error) {
     if (
