@@ -52,7 +52,7 @@ router.post("/users",asyncHandler(async (req, res) => {
   })
 );
 
-//GET courses
+//GET all courses - no authentication required here
 router.get("/courses", asyncHandler(async (req, res) => {
     const courses = await Course.findAll({
       attributes: {
@@ -61,5 +61,24 @@ router.get("/courses", asyncHandler(async (req, res) => {
     });
     res.status(200).json(courses);
     }));
+
+//POST - create courses - authentication required
+router.post("/courses", authenticateUser, asyncHandler(async (req, res) => {
+    try {
+        // Create a new course using the extracted data
+        await Course.create(req.body);
+        //TODO: To be amended to the /courses/id route (for the new course created)
+        res.location("/");
+        // Return 201 status/no content
+        res.status(201).end();
+      } catch (error) {
+        if (error.name === "SequelizeValidationError" || error.name === "SequelizeUniqueConstraintError") {
+          const errors = error.errors.map((err) => err.message);
+          res.status(400).json({ errors });
+        } else {
+          throw error;
+        }
+      }
+}));
 
 module.exports = router;
