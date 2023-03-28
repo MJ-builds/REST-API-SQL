@@ -120,4 +120,27 @@ router.post(
   })
 );
 
+//PUT - update a particular course - authentication required
+router.put("/courses/:id",authenticateUser,asyncHandler(async (req, res) => {
+try {
+    const course = await Course.findByPk(req.params.id);
+      if (course.userId === req.currentUser.id) {
+        await course.update(req.body);
+        res.status(204).end();
+      } else {
+        res.status(403).json({ message: "Unauthorised User Edit - Denied" });
+      }
+  } catch (error) {
+    if (
+      error.name === "SequelizeValidationError" ||
+      error.name === "SequelizeUniqueConstraintError"
+    ) {
+      const errors = error.errors.map((err) => err.message);
+      res.status(400).json({ errors });
+    } else {
+      throw error;
+    }
+  }
+}));
+
 module.exports = router;
