@@ -41,6 +41,7 @@ module.exports = (sequelize) => {
     { sequelize }
   );
 
+    //Course model association to User model - one to one
   Course.associate = (models) => {
     Course.belongsTo(models.User, {
       as: 'user', //alias

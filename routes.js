@@ -18,7 +18,7 @@ function asyncHandler(cb) {
   };
 }
 
-//GET - return the currently authenticated user
+//GET - return the currently authenticated user (auth required)
 router.get(
   "/users",
   authenticateUser,
@@ -33,7 +33,7 @@ router.get(
   })
 );
 
-//POST - create users
+//POST - create users (no auth required)
 router.post(
   "/users",
   asyncHandler(async (req, res) => {
@@ -70,6 +70,7 @@ router.get(
           model: User,
           as: "user",
           attributes: {
+            //added: exclude password from the response for security reasons
             exclude: ["createdAt", "updatedAt", "password"],
           },
         },
@@ -94,6 +95,7 @@ router.get(
           model: User,
           as: "user",
           attributes: {
+            //added: exclude password from the response for security reasons
             exclude: ["createdAt", "updatedAt", "password"],
           },
         },
@@ -115,7 +117,6 @@ router.post(
     try {
       // Create a new course using the extracted data
       const course = await Course.create(req.body);
-      //TODO: confirm /api included. to test once router.get for the course is created
       res.location(`/courses/${course.id}`);
       // Return 201 status/no content
       res.status(201).end();

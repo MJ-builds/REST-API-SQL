@@ -77,7 +77,7 @@ module.exports = (sequelize) => {
     }
   );
 
-  // todo: Add associations 'as' property to the model definition.
+  //User model associations to Course model - one to many
   User.associate = (models) => {
     User.hasMany(models.Course, { 
         as: 'user', //alias
